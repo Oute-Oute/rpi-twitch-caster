@@ -1,11 +1,8 @@
 import requests
-import simple_websocket
-import json
 import time
 import sys
 import threading
 from copy import copy
-import os
 import subprocess
 
 from PyQt5.QtCore import *
