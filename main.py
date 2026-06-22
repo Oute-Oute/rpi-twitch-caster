@@ -19,8 +19,8 @@ storage = {}
 default_page = {"type":"status", "text":"RPiCaster display offline."}
 cache = {"page": default_page}
 
-VLC_COMMANDLINE = "cvlc --loop --fullscreen --no-osd --aout=pulse --network-caching=10000"
-# VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=default:CARD=vc4hdmi --fullscreen --no-osd"
+# VLC_COMMANDLINE = "cvlc --loop --fullscreen --no-osd --aout=pulse --network-caching=10000"
+VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=default:CARD=vc4hdmi --fullscreen --no-osd"
 
 CHANNEL_NAME='littlebigwhale'
 
@@ -166,33 +166,32 @@ class MainWindow(QMainWindow):
             except OSError as ex:
                 print("Failed to start player (%s). Exception: %s"%(cmd, ex))
         elif pagetype=='twitch':
-            twitch_url = f"https://www.twitch.tv/{CHANNEL_NAME}"
-
-            result = subprocess.run(
-                [
-                    "streamlink",
-                    "--stream-url",
-                    twitch_url,
-                    "best"
-                ],
+            hls = subprocess.run(
+                ["streamlink", "--stream-url", page["url"], "720p60"],
                 capture_output=True,
-                text=True,
-                check=True
-            )
+                text=True
+            ).stdout.strip()
+            print("HLS =", repr(hls))
+            if not hls:
+                raise RuntimeError("Impossible de récupérer le stream HLS")
 
-            stream_url = result.stdout.strip()
-
-            cmd = VLC_COMMANDLINE.split(" ") + [stream_url]
             cmd = [
                 "streamlink",
+                "--retry-open", "5",
+                "--hls-live-edge", "6",
                 "--player", "vlc",
-                "--player-args", "--network-caching=5000",
-                f"https://www.twitch.tv/{CHANNEL_NAME}",
-                "audio_only"
+                "--player-args",
+                "--network-caching=10000 --clock-jitter=0 --clock-synchro=0 --avcodec-hw=none",
+                page["url"],
+                "best"
             ]
 
-            player_process = subprocess.Popen(
+            self.player_process = subprocess.Popen(cmd)
+
+            self.player_process = subprocess.Popen(
                 cmd,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
             )
         else:
             text = "Invalid page type: %s"%(pagetype)
