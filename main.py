@@ -1,9 +1,12 @@
+#!/usr/bin/env python3
+
 import requests
 import time
 import sys
 import threading
 from copy import copy
 import subprocess
+import xml.etree.ElementTree as ET
 
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -19,7 +22,7 @@ cache = {"page": default_page}
 # VLC_COMMANDLINE = "cvlc --loop --fullscreen --no-osd --aout=pulse --network-caching=10000"
 VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=default:CARD=vc4hdmi --fullscreen --no-osd"
 
-CHANNEL_NAME='littlebigwhale'
+SERVER_ADRESS='83.228.216.138'
 
 def main():
 
@@ -37,24 +40,68 @@ class stream(threading.Thread):
         self.ws = None
         super().__init__()
 
+    def is_streaming(self,stat_url, app, stream_name):
+        try:
+            xml = requests.get(stat_url, timeout=5).text
+        except :
+            return None
+#         xml="""<?xml version="1.0" encoding="utf-8" ?>
+# <rtmp>
+# <nginx_version>1.26.3</nginx_version>
+# <nginx_rtmp_version>1.1.4</nginx_rtmp_version>
+# <built>Apr 11 2025 12:27:04</built>
+# <pid>61724</pid>
+# <uptime>2629</uptime>
+# <naccepted>2</naccepted>
+# <bw_in>0</bw_in>
+# <bytes_in>66390966</bytes_in>
+# <bw_out>0</bw_out>
+# <bytes_out>1058</bytes_out>
+# <server>
+# <application>
+# <name>zas</name>
+# <live>
+# <nclients>0</nclients>
+# </live>
+# </application>
+# <application>
+# <name>ads</name>
+# <live>
+# <nclients>0</nclients>
+# </live>
+# </application>
+# </server>
+# </rtmp>"""
+        root = ET.fromstring(xml)
+
+        for application in root.findall("server/application"):
+            if application.findtext("name") != app:
+                continue
+
+            live = application.find("live")
+            if live is None:
+                continue
+
+            for stream in live.findall("stream"):
+                if stream.findtext("name") == stream_name:
+                    return True
+
+        return False
+
     def run(self):
         self.running = True
         while True:
             try:
-                # self.ws = simple_websocket.Client('ws://localhost:5000/stream', ping_interval=60)
                 while True:
-                    twitch=False
-                    twitch_req=requests.get(f"https://www.twitch.tv/{CHANNEL_NAME}")
-                    if 'isLiveBroadcast' in twitch_req.text:
-                        twitch=True
-                        # print('Twitch channel is live! ')
+                    zas=self.is_streaming(f'http://{SERVER_ADRESS}:8080/stat','zas','live-zas')
+                    ads=self.is_streaming(f'http://{SERVER_ADRESS}:8080/stat','ads','Pubs-cspace')
+                    stream=False
+                    if zas==None and ads==None:
+                        cache['page'] = {"type":"status", "text":"RTMP Offline."}
+                    if zas or ads:
+                        stream=True
 
-                    cache['page'] = {"type":f"{"twitch" if twitch else "web"}", "url":f"{f"https://www.twitch.tv/{CHANNEL_NAME}" if twitch else "https://www.planete-sciences.org/espace/scae/qualifications&contest=cspace" }"}
-
-                    # data = self.ws.receive()
-                    # data = json.loads(data)
-                    # storage.update(data)
-                    # print(storage)
+                    cache['page'] = {"type":f"{"videostream" if stream else "web"}", "url":f"{f"rtmp://{SERVER_ADRESS}/{"zas" if zas else "ads"}" if stream else "https://www.planete-sciences.org/espace/scae/qualifications&contest=cspace" }"}
                     
             except (KeyboardInterrupt):
                 sys.exit()
@@ -66,7 +113,7 @@ class stream(threading.Thread):
             if not self.running:
                 return
             print("Reconnecting...")
-            time.sleep(10)
+            time.sleep(1)
 
     def stop(self):
         self.running = False
@@ -162,34 +209,6 @@ class MainWindow(QMainWindow):
                 self.player_process = subprocess.Popen(cmd, stdout=subprocess.DEVNULL)
             except OSError as ex:
                 print("Failed to start player (%s). Exception: %s"%(cmd, ex))
-        elif pagetype=='twitch':
-            hls = subprocess.run(
-                ["streamlink", "--stream-url", page["url"], "720p60"],
-                capture_output=True,
-                text=True
-            ).stdout.strip()
-            print("HLS =", repr(hls))
-            if not hls:
-                raise RuntimeError("Impossible de récupérer le stream HLS")
-
-            cmd = [
-                "streamlink",
-                "--retry-open", "5",
-                "--hls-live-edge", "6",
-                "--player", "vlc",
-                "--player-args",
-                "--network-caching=10000 --clock-jitter=0 --clock-synchro=0 --avcodec-hw=none",
-                page["url"],
-                "best"
-            ]
-
-            self.player_process = subprocess.Popen(cmd)
-
-            self.player_process = subprocess.Popen(
-                cmd,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
-            )
         else:
             text = "Invalid page type: %s"%(pagetype)
             self.label_status.setText(text)
