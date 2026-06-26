@@ -25,7 +25,7 @@ VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=default:CARD=vc4h
 SERVER_ADRESS='83.228.216.138'
 
 def main():
-
+    print('Starting...')
     app = QApplication(sys.argv)
     cursor = QCursor(Qt.BlankCursor)
     app.setOverrideCursor(cursor)
@@ -93,6 +93,7 @@ class stream(threading.Thread):
         while True:
             try:
                 while True:
+                    print('check rtmp')
                     zas=self.is_streaming(f'http://{SERVER_ADRESS}:8080/stat','zas','live-zas')
                     ads=self.is_streaming(f'http://{SERVER_ADRESS}:8080/stat','ads','Pubs-cspace')
                     stream=False
