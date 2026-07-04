@@ -1,0 +1,12 @@
+[Unit]
+Description=Update Repository
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/update-repo.sh
+User=root
+
+[Install]
+WantedBy=multi-user.target
