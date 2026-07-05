@@ -94,8 +94,8 @@ class stream(threading.Thread):
             try:
                 while True:
                     print('check rtmp')
-                    zas=self.is_streaming(f'http://{SERVER_ADRESS}:8080/stat','zas','live-zas')
-                    ads=self.is_streaming(f'http://{SERVER_ADRESS}:8080/stat','ads','Pubs-cspace')
+                    zas=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','zas','live-zas')
+                    ads=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','ads','Pubs-cspace')
                     stream=False
                     if zas==None and ads==None:
                         cache['page'] = {"type":"status", "text":"RTMP Offline."}
