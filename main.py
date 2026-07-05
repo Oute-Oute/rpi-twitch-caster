@@ -20,7 +20,7 @@ default_page = {"type":"status", "text":"RPiCaster display offline."}
 cache = {"page": default_page}
 
 # VLC_COMMANDLINE = "cvlc --loop --fullscreen --no-osd --aout=pulse --network-caching=10000"
-VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=default:CARD=vc4hdmi --fullscreen --no-osd"
+VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=default:CARD=vc4hdmi --fullscreen --no-osd --avcodec-hw=none"
 
 SERVER_ADRESS='83.228.216.138'
 
