@@ -57,8 +57,16 @@ class stream(threading.Thread):
                 continue
 
             for stream in live.findall("stream"):
-                if stream.findtext("name") == stream_name:
+                if stream.findtext("name") != stream_name:
+                    continue
+
+                # ✅ THIS is the key fix
+                publishing = stream.find("publishing")
+
+                if publishing is not None:
                     return True
+
+                return False  # stream exists but not publishing
 
         return False
 
