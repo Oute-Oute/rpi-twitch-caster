@@ -76,7 +76,7 @@ class stream(threading.Thread):
                         stream=True
 
                     cache['page'] = {"type":f"{"videostream" if stream else "web"}", "url":f"{f"rtmp://{SERVER_ADRESS}/{"zas" if zas else "ads/Pubs-cspace"}" if stream else "https://www.planete-sciences.org/espace/scae/qualifications&contest=cspace" }"}
-                    print('sleep')
+                    time.sleep(5)
             except (KeyboardInterrupt):
                 sys.exit()
             except (EOFError):
