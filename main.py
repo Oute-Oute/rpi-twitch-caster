@@ -67,7 +67,6 @@ class stream(threading.Thread):
         while True:
             try:
                 while True:
-                    print('check rtmp')
                     zas=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','zas','live-zas')
                     ads=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','ads','Pubs-cspace')
                     stream=False
@@ -77,7 +76,7 @@ class stream(threading.Thread):
                         stream=True
 
                     cache['page'] = {"type":f"{"videostream" if stream else "web"}", "url":f"{f"rtmp://{SERVER_ADRESS}/{"zas" if zas else "ads/Pubs-cspace"}" if stream else "https://www.planete-sciences.org/espace/scae/qualifications&contest=cspace" }"}
-                    time.sleep(5)
+                    print('sleep')
             except (KeyboardInterrupt):
                 sys.exit()
             except (EOFError):
