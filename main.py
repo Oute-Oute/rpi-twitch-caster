@@ -45,33 +45,7 @@ class stream(threading.Thread):
             xml = requests.get(stat_url, timeout=5).text
         except :
             return None
-#         xml="""<?xml version="1.0" encoding="utf-8" ?>
-# <rtmp>
-# <nginx_version>1.26.3</nginx_version>
-# <nginx_rtmp_version>1.1.4</nginx_rtmp_version>
-# <built>Apr 11 2025 12:27:04</built>
-# <pid>61724</pid>
-# <uptime>2629</uptime>
-# <naccepted>2</naccepted>
-# <bw_in>0</bw_in>
-# <bytes_in>66390966</bytes_in>
-# <bw_out>0</bw_out>
-# <bytes_out>1058</bytes_out>
-# <server>
-# <application>
-# <name>zas</name>
-# <live>
-# <nclients>0</nclients>
-# </live>
-# </application>
-# <application>
-# <name>ads</name>
-# <live>
-# <nclients>0</nclients>
-# </live>
-# </application>
-# </server>
-# </rtmp>"""
+
         root = ET.fromstring(xml)
 
         for application in root.findall("server/application"):
@@ -103,7 +77,7 @@ class stream(threading.Thread):
                         stream=True
 
                     cache['page'] = {"type":f"{"videostream" if stream else "web"}", "url":f"{f"rtmp://{SERVER_ADRESS}/{"zas" if zas else "ads/Pubs-cspace"}" if stream else "https://www.planete-sciences.org/espace/scae/qualifications&contest=cspace" }"}
-                    
+                    time.sleep(5)
             except (KeyboardInterrupt):
                 sys.exit()
             except (EOFError):
