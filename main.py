@@ -102,7 +102,7 @@ class stream(threading.Thread):
                     if zas or ads:
                         stream=True
 
-                    cache['page'] = {"type":f"{"videostream" if stream else "web"}", "url":f"{f"rtmp://{SERVER_ADRESS}/{"zas" if zas else "ads"}" if stream else "https://www.planete-sciences.org/espace/scae/qualifications&contest=cspace" }"}
+                    cache['page'] = {"type":f"{"videostream" if stream else "web"}", "url":f"{f"rtmp://{SERVER_ADRESS}/{"zas" if zas else "ads/Pubs-cspace"}" if stream else "https://www.planete-sciences.org/espace/scae/qualifications&contest=cspace" }"}
                     
             except (KeyboardInterrupt):
                 sys.exit()
@@ -114,7 +114,7 @@ class stream(threading.Thread):
             if not self.running:
                 return
             print("Reconnecting...")
-            time.sleep(1)
+            time.sleep(5)
 
     def stop(self):
         self.running = False
