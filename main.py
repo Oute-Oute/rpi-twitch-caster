@@ -22,7 +22,7 @@ cache = {"page": default_page}
 # VLC_COMMANDLINE = "cvlc --loop --fullscreen --no-osd --aout=pulse --network-caching=10000"
 #VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=default:CARD=vc4hdmi --fullscreen --no-osd --network-caching=10000 --file-caching=5000"
 print(sys.argv)
-if "--fake-fullscreen-hd" in sys.argv:
+if "--fake-hd" in sys.argv:
     VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=plughw:CARD=vc4hdmi,DEV=0 --no-audio-time-stretch --fullscreen --no-osd"
 else :
     VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=plughw:CARD=vc4hdmi,DEV=0 --no-audio-time-stretch --fullscreen --video-filter=scale --scale=0.6667 --no-osd"
@@ -122,7 +122,8 @@ class MainWindow(QMainWindow):
         self.label_message.setWordWrap(True)
 
         self.browser = QWebEngineView()
-        if "--fake-fullscreen-hd" in sys.argv:
+        if "--fake-hd" in sys.argv:
+            print('hd')
             self.browser.resize(1280,720)
         self.browser_img = QWebEngineView()
 
@@ -148,7 +149,7 @@ class MainWindow(QMainWindow):
         self.show()
         if "--fake-fullscreen" in sys.argv:
             self.setGeometry(0, 0, 1920, 1080)
-        if "--fake-fullscreen-hd" in sys.argv:
+        if "--fake-hd" in sys.argv:
             self.setGeometry(0, 0, 1280, 720)
         else:
             self.showFullScreen()
