@@ -124,7 +124,7 @@ class MainWindow(QMainWindow):
         self.browser = QWebEngineView()
         if "--fake-hd" in sys.argv:
             print('hd')
-            self.browser.resize(1280,720)
+            self.browser.setZoomFactor(0.6667)
         self.browser_img = QWebEngineView()
 
         self.black = QWidget()
