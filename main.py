@@ -22,7 +22,6 @@ cache = {"page": default_page}
 # VLC_COMMANDLINE = "cvlc --loop --fullscreen --no-osd --aout=pulse --network-caching=10000"
 VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=default:CARD=vc4hdmi --fullscreen --no-osd --network-caching=10000 --file-caching=5000"
 VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=plughw:CARD=vc4hdmi,DEV=0 --no-audio-time-stretch --fullscreen --no-osd"
-VLC_COMMANDLINE = "vlc"
 SERVER_ADRESS='83.228.216.138'
 
 def main():
