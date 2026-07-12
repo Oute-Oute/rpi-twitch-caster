@@ -25,19 +25,7 @@ print(sys.argv)
 if "--fake-hd" in sys.argv:
     VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=plughw:CARD=vc4hdmi,DEV=0 --no-audio-time-stretch --fullscreen  --autoscale --no-osd"
 else :
-    VLC_COMMANDLINE = (
-    "cvlc "
-    "--loop "
-    "--aout=alsa "
-    "--alsa-audio-device=plughw:CARD=vc4hdmi,DEV=0 "
-    "--no-audio-time-stretch "
-    "--fullscreen "
-    "--autoscale "
-    "--scale=1 "
-    "--video-filter=scale "
-    "--no-osd "
-    "--no-video-title-show"
-)
+    VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=plughw:CARD=vc4hdmi,DEV=0 --no-audio-time-stretch --fullscreen --autoscale --scale=1 --video-filter=scale --no-osd --no-video-title-show"
 SERVER_ADRESS='83.228.216.138'
 
 def main():
