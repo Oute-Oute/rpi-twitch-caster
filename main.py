@@ -78,7 +78,7 @@ class stream(threading.Thread):
         while True:
             try:
                 while True:
-                    zas=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','zas','live-zas')
+                    zas=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','zas','')
                     ads=False
                     if not zas :
                         ads=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','ads','Pubs-cspace')
