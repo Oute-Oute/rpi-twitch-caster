@@ -78,7 +78,7 @@ class stream(threading.Thread):
         while True:
             try:
                 while True:
-                    ads=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','ads','Pubs-cspace')
+                    ads=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','ads','')
                     stream=False
                     if ads==None:
                         cache['page'] = {"type":"status", "text":"RTMP Offline."}
