@@ -25,7 +25,7 @@ print(sys.argv)
 if "--fake-hd" in sys.argv:
     VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=plughw:CARD=vc4hdmi,DEV=0 --no-audio-time-stretch --fullscreen  --autoscale --no-osd"
 else :
-    VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=plughw:CARD=vc4hdmi,DEV=0 --no-audio-time-stretch --fullscreen --autoscale --no-osd --no-video-title-show rtmp://83.228.216.138/zas"
+    VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=default:CARD=vc4hdmi --fullscreen --no-osd"
 SERVER_ADRESS='83.228.216.138'
 
 def main():
@@ -78,17 +78,14 @@ class stream(threading.Thread):
         while True:
             try:
                 while True:
-                    zas=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','zas','')
-                    ads=False
-                    if not zas :
-                        ads=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','ads','Pubs-cspace')
+                    ads=self.is_streaming(f'http://{SERVER_ADRESS}:80/stat','ads','Pubs-cspace')
                     stream=False
-                    if zas==None and ads==None:
+                    if ads==None:
                         cache['page'] = {"type":"status", "text":"RTMP Offline."}
-                    if zas or ads:
+                    if ads:
                         stream=True
 
-                    cache['page'] = {"type":f"{"videostream" if stream else "web"}", "url":f"{f"rtmp://{SERVER_ADRESS}/{"zas" if zas else "ads/Pubs-cspace"}" if stream else "https://www.planete-sciences.org/espace/scae/qualifications&contest=cspace" }"}
+                    cache['page'] = {"type":f"{"videostream" if stream else "web"}", "url":f"{f"rtmp://{SERVER_ADRESS}/ads" if stream else "https://www.planete-sciences.org/espace/scae/qualifications&contest=cspace" }"}
                     time.sleep(1)
             except (KeyboardInterrupt):
                 sys.exit()
