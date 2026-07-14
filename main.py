@@ -23,9 +23,9 @@ cache = {"page": default_page}
 #VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=default:CARD=vc4hdmi --fullscreen --no-osd --network-caching=10000 --file-caching=5000"
 print(sys.argv)
 if "--fake-hd" in sys.argv:
-    VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=plughw:CARD=vc4hdmi,DEV=0 --no-audio-time-stretch --fullscreen  --autoscale --no-osd"
+    VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=plughw:CARD=vc4hdmi,DEV=0 --no-audio-time-stretch --fullscreen  --autoscale --no-osd --avcodec-hw=any"
 else :
-    VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=default:CARD=vc4hdmi --fullscreen --no-osd"
+    VLC_COMMANDLINE = "cvlc --loop --aout=alsa --alsa-audio-device=plughw:CARD=vc4hdmi,DEV=0 --no-audio-time-stretch --fullscreen --autoscale --no-osd --no-video-title-show --avcodec-hw=any --network-caching=3000"
 SERVER_ADRESS='83.228.216.138'
 
 def main():
